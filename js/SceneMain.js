@@ -76,9 +76,54 @@ class SceneMain extends Phaser.Scene {
             repeat: -1
         });
         
+        this.player = new Player(this, this.game.config.width * 0.5, this.game.config.height * 0.5, 'player');
+        
     }
     
     update() {
         
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
