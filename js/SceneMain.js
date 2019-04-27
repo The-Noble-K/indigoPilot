@@ -56,24 +56,151 @@ class SceneMain extends Phaser.Scene {
         this.keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        
+        //Initialize Groups
+        this.enemies = this.add.group();
+        this.enemyLasers = this.add.group();
+        this.playerLasers = this.add.group();
+        
+        //Event Spawns
+        this.time.addEvent({
+            delay: 1000,
+            callback: function() {
+                var enemy = null;
+                
+                if (Phaser.Math.Between(0, 10) >= 3) {
+                    enemy = new GunShip(this, Phaser.Math.Between(0, this.game.config.width), 0);
+                } else if (Phaser.Math.Between(0, 10) >= 5) {
+                    if (this.getEnemiesByType('ChaserShip').length < 5) {
+                        enemy = new ChaserShip(this, Phaser.Math.Between(0, this.game.config.width), 0);
+                    }
+                } else {
+                    enemy = new CarrierShip(this, Phaser.Math.Between(0, this.game.config.width), 0);
+                }
+                
+                if (enemy !== null) {
+                    this.enemies.add(enemy);
+                }
+            },
+            callbackScope: this,
+            loop: true
+        });
+        
+        //Collision Detection
+        //<--Player Lasers & Enemies
+        this.physics.add.collider(this.playerLasers, this.enemies, function(playerLaser, enemy) {
+           if (enemy) {
+               if (enemy.onDestroy !== undefined) {
+                   enemy.onDestroy();
+               }
+               enemy.explode(true);
+               playerLaser.destroy();
+           } 
+        });
+        
+        //<--Player & Enemies
+        this.physics.add.collider(this.player, this.enemies, function(player, enemy) {
+            if (!player.getData('isDead') && !enemy.getData('isDead')) {
+                player.explode(false);
+                enemy.explode(true);
+            }
+        });
+        
+        //<--Player & Enemy Lasers
+        this.physics.add.overlap(this.player, this.enemyLasers, function(player, laser) {
+            if(!player.getData('isDead') && !laser.getData('isDead')) {
+                player.explode(false);
+                laser.destroy();
+            }
+        });
     }
     
     update() {
         
         //Update Player
-        this.player.update();
-        //Up & Down
-        if (this.keyW.isDown || this.keyUp.isDown) {
-            this.player.moveUp();
-        } else if (this.keyS.isDown || this.keyDown.isDown) {
-            this.player.moveDown();
+        if(!this.player.getData('isDead')) {
+            this.player.update();
+            //Up & Down
+            if (this.keyW.isDown || this.keyUp.isDown) {
+                this.player.moveUp();
+            } else if (this.keyS.isDown || this.keyDown.isDown) {
+                this.player.moveDown();
+            }
+            //Left & Right
+            if (this.keyA.isDown || this.keyLeft.isDown) {
+                this.player.moveLeft();
+            } else if (this.keyD.isDown || this.keyRight.isDown) {
+                this.player.moveRight();
+            }
+            //Lasers
+            if (this.keySpace.isDown) {
+                this.player.setData('isShooting', true);
+            } else {
+                this.player.setData('timerShootTick', this.player.getData('timerShootDelay') - 1);
+                this.player.setData('isShooting', false);
+            }
         }
-        //Left & Right
-        if (this.keyA.isDown || this.keyLeft.isDown) {
-            this.player.moveLeft();
-        } else if (this.keyD.isDown || this.keyRight.isDown) {
-            this.player.moveRight();
+        
+        //Update Enemies
+        for (var i = 0; i < this.enemies.getChildren().length; i++) {
+            var enemy = this.enemies.getChildren()[i];
+            enemy.update();
+            
+            //Frustum Culling
+            if (enemy.x < -enemy.displayWidth ||
+                enemy.x > this.game.config.width + enemy.displayWidth ||
+                enemy.y < -enemy.displayHeight * 4 ||
+                enemy.y > this.game.config.height + enemy.displayHeight) {
+                
+                if (enemy) {
+                    if (enemy.onDestroy !== undefined) {
+                        enemy.onDestroy();
+                    }
+                    enemy.destroy();
+                }
+            }
         }
+        
+        //Update Enemy Lasers
+        for (var i = 0; i < this.enemyLasers.getChildren().length; i++) {
+            var laser = this.enemyLasers.getChildren()[i];
+            laser.update();
+            
+            if (laser.x < -laser.displayWidth ||
+                laser.x > this.game.config.width + laser.displayWidth ||
+                laser.y < -laser.displayHeight ||
+                laser.y > this.game.config.height + laser.displayHeight) {
+                if (laser) {
+                    laser.destroy();
+                }
+            }
+        }
+        
+        //Update Player Lasers
+        for (var i = 0; i < this.playerLasers.getChildren().length; i++) {
+            var laser = this.playerLasers.getChildren()[i];
+            laser.update();
+            
+            if (laser.x < -laser.displayWidth ||
+                laser.x > this.game.config.width + laser.displayWidth ||
+                laser.y < -laser.displayHeight ||
+                laser.y > this.game.config.height + laser.displayHeight) {
+                if (laser) {
+                    laser.destroy();
+                }
+            }
+        }
+    }
+    
+    getEnemiesByType(type) {
+        var arr = [];
+        for (var i = 0; i < this.enemies.getChildren().length; i++) {
+            var enemy = this.enemies.getChildren()[i];
+            if (enemy.getData('type') == type) {
+                arr.push(enemy);
+            }
+        }
+        return arr;
     }
 }
 
