@@ -18,6 +18,7 @@ class Player extends Entity {
         this.play('player');
     }
     
+    //Movement Controls
     moveUp() {
         this.body.velocity.y = -this.getData('speed');
     }
@@ -35,8 +36,12 @@ class Player extends Entity {
     }
     
     update() {
+        
+        //Reset Velocity
         this.body.setVelocity(0, 0);
         
+        
+        //Stay in Bounds
         this.x = Phaser.Math.Clamp(this.x, 0, this.scene.game.config.width);
         this.y = Phaser.Math.Clamp(this.y, 0, this.scene.game.config.height);
     }
