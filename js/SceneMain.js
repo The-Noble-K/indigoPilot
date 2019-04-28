@@ -28,6 +28,11 @@ class SceneMain extends Phaser.Scene {
     
     create() {
         
+        //Create Scrolling Backgrounds
+        this.tileSprite = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'bg');
+        this.tileSprite2 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'clouds');
+        this.tileSprite3 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'transparentClouds');
+        
         //Theme Music
         var music = this.sound.add('theme');
         music.setLoop(true);
@@ -50,14 +55,6 @@ class SceneMain extends Phaser.Scene {
         
         //Sound Effects
         this.sfx = {};
-        
-        //Backgrounds
-        this.backgrounds = [];
-        for (var i = 0; i < 2; i++) {
-            var bg = new ScrollingBackground(this, 'bg', i * 10);
-            this.backgrounds.push(bg);
-        }
-        
         
         //Instantiate Player
         this.player = new Player(this, this.game.config.width * 0.5, this.game.config.height * 0.5, 'player');
@@ -148,6 +145,11 @@ class SceneMain extends Phaser.Scene {
     
     update() {
         
+        //Update Backgrounds
+        this.tileSprite.tilePositionY -= 1;
+        this.tileSprite2.tilePositionY += 3;
+        this.tileSprite3.tilePositionY -= 1;
+        
         //Update Player
         if(!this.player.getData('isDead')) {
             this.player.update();
@@ -222,11 +224,6 @@ class SceneMain extends Phaser.Scene {
                     laser.destroy();
                 }
             }
-        }
-        
-        //Update Backgrounds
-        for (var i = 0; i < this.backgrounds.length; i++) {
-            this.backgrounds[i].update();
         }
     }
 }

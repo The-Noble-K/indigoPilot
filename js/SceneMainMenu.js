@@ -19,6 +19,11 @@ class SceneMainMenu extends Phaser.Scene {
   }
 
   create() {
+      
+    this.tileSprite = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'bg');
+    this.tileSprite2 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'clouds');
+    this.tileSprite3 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'transparentClouds');
+      
     var music = this.sound.add('theme');
         music.setLoop(true);
         music.play();
@@ -63,17 +68,13 @@ class SceneMainMenu extends Phaser.Scene {
       align: 'center'
     });
     this.title.setOrigin(0.5);
-
-    this.backgrounds = [];
-    for (var i = 0; i < 2; i++) {
-      var bg = new ScrollingBackground(this, 'bg', i * 10);
-      this.backgrounds.push(bg);
-    }
   }
 
   update() {
-    for (var i = 0; i < this.backgrounds.length; i++) {
-      this.backgrounds[i].update();
-    }
+    
+    this.tileSprite.tilePositionY -= 1;
+    this.tileSprite2.tilePositionY -= 3;
+    this.tileSprite3.tilePositionY -= 1;
+    
   }
 }
