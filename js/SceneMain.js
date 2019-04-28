@@ -8,10 +8,12 @@ class SceneMain extends Phaser.Scene {
         
         //Backgrounds & Sprites
         this.load.image('bg', 'content/background.png');
+        this.load.image('clouds', 'content/clouds.png');
+        this.load.image('transparentClouds', 'content/clouds-transparent.png');
         this.load.spritesheet('player', 'content/ship.png', { frameWidth: 16, frameHeight: 24 });
         this.load.spritesheet('explosion', 'content/explosion.png', { frameWidth: 16, frameHeight: 16 });
         this.load.image('playerLaser', 'content/playerlaser.png');
-        this.load.image('enemyLaser', 'content/enemylaser.png')
+        this.load.image('enemyLaser', 'content/enemylaser.png');
         this.load.image('smEnemy', 'content/smallship.png');
         this.load.image('mdEnemy', 'content/mediumship.png');
         this.load.image('lgEnemy', 'content/largeship.png');
@@ -37,9 +39,19 @@ class SceneMain extends Phaser.Scene {
         this.anims.create({
             key: 'explosion',
             frames: this.anims.generateFrameNumbers('explosion'),
-            frameRate: 16,
+            frameRate: 8,
             repeat: -1
         });
+        
+        //Sound Effects
+        this.sfx = {};
+        
+        //Backgrounds
+        this.backgrounds = [];
+        for (var i = 0; i < 2; i++) {
+            var bg = new ScrollingBackground(this, 'bg', i * 10);
+            this.backgrounds.push(bg);
+        }
         
         
         //Instantiate Player
@@ -61,6 +73,7 @@ class SceneMain extends Phaser.Scene {
         this.enemies = this.add.group();
         this.enemyLasers = this.add.group();
         this.playerLasers = this.add.group();
+        
         
         //Event Spawns
         this.time.addEvent({
@@ -102,6 +115,7 @@ class SceneMain extends Phaser.Scene {
         this.physics.add.collider(this.player, this.enemies, function(player, enemy) {
             if (!player.getData('isDead') && !enemy.getData('isDead')) {
                 player.explode(false);
+                player.onDestroy();
                 enemy.explode(true);
             }
         });
@@ -110,9 +124,21 @@ class SceneMain extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.enemyLasers, function(player, laser) {
             if(!player.getData('isDead') && !laser.getData('isDead')) {
                 player.explode(false);
+                player.onDestroy();
                 laser.destroy();
             }
         });
+    }
+    
+    getEnemiesByType(type) {
+        var arr = [];
+        for (var i = 0; i < this.enemies.getChildren().length; i++) {
+            var enemy = this.enemies.getChildren()[i];
+            if (enemy.getData('type') == type) {
+                arr.push(enemy);
+            }
+        }
+        return arr;
     }
     
     update() {
@@ -166,6 +192,7 @@ class SceneMain extends Phaser.Scene {
             var laser = this.enemyLasers.getChildren()[i];
             laser.update();
             
+            //Frustum Culling
             if (laser.x < -laser.displayWidth ||
                 laser.x > this.game.config.width + laser.displayWidth ||
                 laser.y < -laser.displayHeight ||
@@ -181,6 +208,7 @@ class SceneMain extends Phaser.Scene {
             var laser = this.playerLasers.getChildren()[i];
             laser.update();
             
+            //Frustum Culling
             if (laser.x < -laser.displayWidth ||
                 laser.x > this.game.config.width + laser.displayWidth ||
                 laser.y < -laser.displayHeight ||
@@ -190,59 +218,10 @@ class SceneMain extends Phaser.Scene {
                 }
             }
         }
-    }
-    
-    getEnemiesByType(type) {
-        var arr = [];
-        for (var i = 0; i < this.enemies.getChildren().length; i++) {
-            var enemy = this.enemies.getChildren()[i];
-            if (enemy.getData('type') == type) {
-                arr.push(enemy);
-            }
+        
+        //Update Backgrounds
+        for (var i = 0; i < this.backgrounds.length; i++) {
+            this.backgrounds[i].update();
         }
-        return arr;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

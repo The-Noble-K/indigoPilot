@@ -85,6 +85,17 @@ class Player extends Entity {
             }
         }
     }
+    
+    onDestroy() {
+        this.scene.time.addEvent({
+            delay: 1000,
+            callback: function() {
+                this.scene.scene.start('SceneGameOver');
+            },
+            callbackScope: this,
+            loop: false
+        });
+    }
 }
 
 class PlayerLaser extends Entity {
@@ -172,6 +183,32 @@ class CarrierShip extends Entity {
     constructor(scene, x, y) {
         super(scene, x, y, 'lgEnemy', 'CarrierShip');
         this.body.velocity.y = Phaser.Math.Between(50, 100);
+    }
+}
+
+class ScrollingBackground {
+    
+    constructor(scene, key, velocityY) {
+        this.scene = scene;
+        this.key = key;
+        this.velocityY = velocityY;
+        this.layers = this.scene.add.group();
+        this.createLayers();
+    }
+    
+    createLayers() {
+        for (var i = 0; i < 2; i++) {
+            var layer = this.scene.add.sprite(250, 250, this.key);
+            layer.y = (layer.displayHeight * i);
+            layer.setDepth(-5 - (i - 1));
+            this.scene.physics.world.enableBody(layer, 0);
+            layer.body.velocity.y = this.velocityY;
+            this.layers.add(layer);
+        }
+    }
+    
+    update() {
+        
     }
 }
 
