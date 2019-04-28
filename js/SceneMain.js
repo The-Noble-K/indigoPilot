@@ -21,12 +21,17 @@ class SceneMain extends Phaser.Scene {
         this.load.image('pwrup2', 'content/powerup2.png');
         
         //Audio Files
-        //this.load.audio();
+        this.load.audio('theme', 'content/indigoPilotTheme.wav');
         //this.load.audio();
         //this.load.audio();
     }
     
     create() {
+        
+        //Theme Music
+        var music = this.sound.add('theme');
+        music.setLoop(true);
+        music.play();
         
         //Create Animations
         this.anims.create({

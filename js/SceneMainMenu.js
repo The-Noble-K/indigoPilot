@@ -15,9 +15,14 @@ class SceneMainMenu extends Phaser.Scene {
     this.load.image("sprBtnRestartDown", "content/sprBtnRestartDown.png");
     this.load.audio("sndBtnOver", "content/sndBtnOver.wav");
     this.load.audio("sndBtnDown", "content/sndBtnDown.wav");
+    this.load.audio('theme', 'content/indigoPilotTheme.wav');
   }
 
   create() {
+    var music = this.sound.add('theme');
+        music.setLoop(true);
+        music.play();
+      
     this.sfx = {
       btnOver: this.sound.add("sndBtnOver"),
       btnDown: this.sound.add("sndBtnDown")
@@ -32,8 +37,8 @@ class SceneMainMenu extends Phaser.Scene {
     this.btnPlay.setInteractive();
 
     this.btnPlay.on("pointerover", function() {
-      this.btnPlay.setTexture("sprBtnPlayHover"); // set the button texture to sprBtnPlayHover
-      this.sfx.btnOver.play(); // play the button over sound
+      this.btnPlay.setTexture("sprBtnPlayHover"); 
+      this.sfx.btnOver.play();
     }, this);
 
     this.btnPlay.on("pointerout", function() {

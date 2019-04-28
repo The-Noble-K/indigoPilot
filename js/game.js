@@ -15,7 +15,11 @@ var config = {
         SceneGameOver
     ],
     pixelArt: true,
-    roundPixels: true
+    roundPixels: true,
+    audio: {
+        disableWebAudio: true,
+        noAudio: false
+    }
 };
 
 var game = new Phaser.Game(config);
