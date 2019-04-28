@@ -11,10 +11,10 @@ class SceneGameOver extends Phaser.Scene {
     this.tileSprite3 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'transparentClouds');
 
     this.title = this.add.text(this.game.config.width * 0.5, 128, "Game Over", {
-      fontFamily: 'monospace',
+      fontFamily: 'impact',
       fontSize: 48,
       fontStyle: 'bold',
-      color: '#ffffff',
+      color: '#7c7a7f',
       align: 'center'
     });
     this.title.setOrigin(0.5);

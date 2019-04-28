@@ -1,4 +1,5 @@
 class SceneMainMenu extends Phaser.Scene {
+    
   constructor() {
     super({ key: "SceneMainMenu" });
   }
@@ -19,6 +20,7 @@ class SceneMainMenu extends Phaser.Scene {
   }
 
   create() {
+      
       
     this.tileSprite = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'bg');
     this.tileSprite2 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'clouds');
@@ -61,10 +63,10 @@ class SceneMainMenu extends Phaser.Scene {
     }, this);
 
     this.title = this.add.text(this.game.config.width * 0.5, 128, "Indigo Pilot", {
-      fontFamily: 'monospace',
+      fontFamily: 'impact',
       fontSize: 48,
       fontStyle: 'bold',
-      color: '#ffffff',
+      color: '#7c7a7f',
       align: 'center'
     });
     this.title.setOrigin(0.5);
