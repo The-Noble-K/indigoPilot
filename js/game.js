@@ -20,6 +20,11 @@ var config = {
     audio: {
         disableWebAudio: true,
         noAudio: false
+    },
+    fps: {
+        target: 2,
+        min: 2,
+        forceSetTimeOut: true
     }
 };
 
