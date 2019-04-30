@@ -147,7 +147,7 @@ class SceneMain extends Phaser.Scene {
         
         //Update Backgrounds
         this.tileSprite.tilePositionY -= 1;
-        this.tileSprite2.tilePositionY += 3;
+        this.tileSprite2.tilePositionY -= 3;
         this.tileSprite3.tilePositionY -= 1;
         
         //Update Player
