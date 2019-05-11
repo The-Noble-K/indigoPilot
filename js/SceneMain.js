@@ -7,18 +7,26 @@ class SceneMain extends Phaser.Scene {
     preload() {
         
         //Backgrounds & Sprites
-        this.load.image('bg', 'content/background.png');
-        this.load.image('clouds', 'content/clouds.png');
-        this.load.image('transparentClouds', 'content/clouds-transparent.png');
-        this.load.spritesheet('player', 'content/ship.png', { frameWidth: 16, frameHeight: 24 });
-        this.load.spritesheet('explosion', 'content/explosion.png', { frameWidth: 16, frameHeight: 16 });
+        this.load.image('background', "content/backgrounds/background.png");
+        this.load.image('foreground', 'content/backgrounds/foreground.png');
+        this.load.image('player', 'content/sprites/player.png');
         this.load.image('playerLaser', 'content/playerlaser.png');
         this.load.image('enemyLaser', 'content/enemylaser.png');
-        this.load.image('smEnemy', 'content/smallship.png');
-        this.load.image('mdEnemy', 'content/mediumship.png');
-        this.load.image('lgEnemy', 'content/largeship.png');
+        this.load.image('bigEnemy', 'content/sprites/bigEnemy.png');
+        this.load.image('medEnemy', 'content/sprites/medEnemy.png');
+        this.load.image('rocketEnemy', 'content/sprites/rocketEnemy.png');
+        this.load.image('seekerEnemy', 'content/sprites/seekerEnemy.png');
+        this.load.image('tankEnemy', 'content/sprites/tankEnemy.png');
+        this.load.image('truckEnemy', 'content/sprites/truckEnemy.png');
+        this.load.image('turretEnemy', 'content/sprites/turretEnemy.png');
+        this.load.image('xWingEnemy', 'content/sprites/xWingEnemy.png');
+        this.load.image('miniGunEnemy', 'content/sprites/miniGunEnemy.png');
+        this.load.image('wingEnemy', 'content/sprites/wingEnemy.png');
         this.load.image('pwrup1', 'content/powerup1.png');
         this.load.image('pwrup2', 'content/powerup2.png');
+        this.load.image('enemyLasers', 'content/lasersnthings/enemyLasers.png');
+        this.load.image('greenLasers', 'content/lasersnthings/greenLasers.png');
+        this.load.spritesheet('explosion1', 'content/lasersnthings/explosion1.png', { frameWidth: 64, frameHeight: 64 }, 7);
         
         //Audio Files
         this.load.audio('theme', 'content/indigoPilotTheme.wav');
@@ -29,29 +37,22 @@ class SceneMain extends Phaser.Scene {
     create() {
         
         //Create Scrolling Backgrounds
-        this.tileSprite = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'bg');
-        this.tileSprite2 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'clouds');
-        this.tileSprite3 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'transparentClouds');
+        this.background = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 1200, 640, 'background');
+        this.foreground = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 1200, 640, 'foreground');
         
         //Theme Music
         var music = this.sound.add('theme');
         music.setLoop(true);
         music.play();
         
-        //Create Animations
+        //Explosion Effects
         this.anims.create({
-            key: 'player',
-            frames: this.anims.generateFrameNumbers('player'),
-            frameRate: 8,
-            repeat: -1
+            key: 'explosion1',
+            frames: this.anims.generateFrameNumbers('explosion1'),
+            frameRate: 7,
+            repeat: 0
         });
         
-        this.anims.create({
-            key: 'explosion',
-            frames: this.anims.generateFrameNumbers('explosion'),
-            frameRate: 8,
-            repeat: -1
-        });
         
         //Sound Effects
         this.sfx = {};
@@ -79,18 +80,18 @@ class SceneMain extends Phaser.Scene {
         
         //Event Spawns
         this.time.addEvent({
-            delay: 1000,
+            delay: 1500,
             callback: function() {
                 var enemy = null;
                 
                 if (Phaser.Math.Between(0, 10) >= 3) {
-                    enemy = new GunShip(this, Phaser.Math.Between(0, this.game.config.width), 0);
+                    enemy = new GunShip(this, this.game.config.width, Phaser.Math.Between(0, this.game.config.height));
                 } else if (Phaser.Math.Between(0, 10) >= 5) {
                     if (this.getEnemiesByType('ChaserShip').length < 5) {
-                        enemy = new ChaserShip(this, Phaser.Math.Between(0, this.game.config.width), 0);
+                        enemy = new ChaserShip(this, this.game.config.width, Phaser.Math.Between(0, this.game.config.height));
                     }
                 } else {
-                    enemy = new CarrierShip(this, Phaser.Math.Between(0, this.game.config.width), 0);
+                    enemy = new CarrierShip(this, this.game.config.width, Phaser.Math.Between(0, this.game.config.height));
                 }
                 
                 if (enemy !== null) {
@@ -146,9 +147,8 @@ class SceneMain extends Phaser.Scene {
     update() {
         
         //Update Backgrounds
-        this.tileSprite.tilePositionY -= 1;
-        this.tileSprite2.tilePositionY -= 3;
-        this.tileSprite3.tilePositionY -= 1;
+        this.background.tilePositionX += 3;
+        this.foreground.tilePositionX += 5;
         
         //Update Player
         if(!this.player.getData('isDead')) {

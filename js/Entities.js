@@ -11,8 +11,8 @@ class Entity extends Phaser.GameObjects.Sprite {
     
     explode(canDestroy) {
         if (!this.getData('isDead')) {
-            this.setTexture('explosion');
-            this.play('explosion');
+            this.setTexture('explosion1');
+            this.play('explosion1');
             
             if (this.shootTimer !== undefined) {
                 if (this.shootTimer) {
@@ -41,7 +41,6 @@ class Player extends Entity {
     constructor(scene, x, y, key) {
         super(scene, x, y, key, 'Player');
         this.setData('speed', 200);
-        this.play('player');
         this.setData('isShooting', false);
         this.setData('timerShootDelay', 10);
         this.setData('timerShootTick', this.getData('timerShootDelay') - 1);
@@ -101,16 +100,16 @@ class Player extends Entity {
 class PlayerLaser extends Entity {
     
     constructor(scene, x, y) {
-        super(scene, x, y, 'playerLaser');
-        this.body.velocity.y = -200;
+        super(scene, x, y, 'greenLasers');
+        this.body.velocity.x = 200;
     }
 }
 
 class EnemyLaser extends Entity {
     
     constructor(scene, x, y) {
-        super(scene, x, y, 'enemyLaser');
-        this.body.velocity.y = 200;
+        super(scene, x, y, 'enemyLasers');
+        this.body.velocity.x = -200;
     }
     
     onDestroy() {
@@ -122,10 +121,10 @@ class EnemyLaser extends Entity {
 class ChaserShip extends Entity {
     
     constructor(scene, x, y) {
-        super(scene, x, y, 'smEnemy', 'ChaserShip');
+        super(scene, x, y, 'seekerEnemy', 'ChaserShip');
         
         //Randomize Velocity
-        this.body.velocity.y = Phaser.Math.Between(50, 100);
+        this.body.velocity.x = -Phaser.Math.Between(50, 100);
         
         //Define Chase State
         this.states = { MOVE_DOWN: 'MOVE_DOWN', CHASE: 'CHASE'};
@@ -151,10 +150,10 @@ class ChaserShip extends Entity {
 class GunShip extends Entity {
     
     constructor(scene, x, y) {
-        super(scene, x, y, 'mdEnemy', 'GunShip');
+        super(scene, x, y, 'medEnemy', 'GunShip');
         
         //Randomize Velocity
-        this.body.velocity.y = Phaser.Math.Between(50, 100);
+        this.body.velocity.x = -Phaser.Math.Between(50, 100);
         
         //Spawn Laser Objects
         this.shootTimer = this.scene.time.addEvent({
@@ -181,8 +180,8 @@ class GunShip extends Entity {
 class CarrierShip extends Entity {
     
     constructor(scene, x, y) {
-        super(scene, x, y, 'lgEnemy', 'CarrierShip');
-        this.body.velocity.y = Phaser.Math.Between(50, 100);
+        super(scene, x, y, 'bigEnemy', 'CarrierShip');
+        this.body.velocity.x = -Phaser.Math.Between(50, 100);
     }
 }
 

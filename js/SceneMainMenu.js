@@ -5,9 +5,8 @@ class SceneMainMenu extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("bg", "content/background.png");
-    this.load.image('clouds', 'content/clouds.png');
-    this.load.image('transparentClouds', 'content/clouds-transparent.png');
+    this.load.image('background', "content/backgrounds/background.png");
+    this.load.image('foreground', 'content/backgrounds/foreground.png');
     this.load.image("sprBtnPlay", "content/sprBtnPlay.png");
     this.load.image("sprBtnPlayHover", "content/sprBtnPlayHover.png");
     this.load.image("sprBtnPlayDown", "content/sprBtnPlayDown.png");
@@ -21,14 +20,20 @@ class SceneMainMenu extends Phaser.Scene {
 
   create() {
       
-    this.tileSprite = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'bg');
-    this.tileSprite2 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'clouds');
-    this.tileSprite3 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'transparentClouds');
+    //Enable Aracde Physics  
+    //this.game.physics.startSystem(Phaser.Physics.ARCADE);
+    
+    //Define Background Layers
+    this.background = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 1200, 640, 'background');
+    this.foreground = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 1200, 640, 'foreground');
+    
       
+    //Initialize Music  
     var music = this.sound.add('theme');
         music.setLoop(true);
         music.play();
-      
+    
+    //Button SFX
     this.sfx = {
       btnOver: this.sound.add("sndBtnOver"),
       btnDown: this.sound.add("sndBtnDown")
@@ -73,9 +78,8 @@ class SceneMainMenu extends Phaser.Scene {
 
   update() {
     
-    this.tileSprite.tilePositionY -= 1;
-    this.tileSprite2.tilePositionY -= 3;
-    this.tileSprite3.tilePositionY -= 1;
-    
+      this.background.tilePositionX += 3;
+      this.foreground.tilePositionX += 5;
+      
   }
 }

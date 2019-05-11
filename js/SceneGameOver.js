@@ -6,9 +6,8 @@ class SceneGameOver extends Phaser.Scene {
     
   create() {
       
-    this.tileSprite = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'bg');
-    this.tileSprite2 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'clouds');
-    this.tileSprite3 = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 640, 680, 'transparentClouds');
+    this.background = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 1200, 640, 'background');
+    this.foreground = this.add.tileSprite(this.game.config.width/2, this.game.config.height/2, 1200, 640, 'foreground');
 
     this.title = this.add.text(this.game.config.width * 0.5, 128, "Game Over", {
       fontFamily: 'impact',
@@ -54,8 +53,8 @@ class SceneGameOver extends Phaser.Scene {
 
   update() {
     
-    this.tileSprite.tilePositionY -= 1;
-    this.tileSprite2.tilePositionY -= 3;
-    this.tileSprite3.tilePositionY -= 1;
+    this.background.tilePositionX += 3;
+    this.foreground.tilePositionX += 5;
+      
   }
 }

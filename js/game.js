@@ -1,7 +1,7 @@
 var config = {
     type: Phaser.WEBGL,
-    width: 640,
-    height: 680,
+    width: 1200,
+    height: 640,
     autoCenter: 1,
     backgroundColor: 'black',
     physics: {
